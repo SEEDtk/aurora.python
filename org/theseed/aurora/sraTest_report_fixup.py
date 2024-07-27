@@ -119,8 +119,9 @@ USAGE
             # two columns.
             goodLines = {}
             badLines = {}
-            keyList = set()
+            keyList = []
             n = len(lines)
+            lastKey = ""
             for i in range(1, n):
                 fields = getRecord(inIter)
                 recType = getType(fields)
@@ -130,7 +131,9 @@ USAGE
                     goodLines[key] = fields
                 else:
                     badLines[key] = fields
-                keyList.add(key)
+                if key != lastKey:
+                    keyList.add(key)
+                    lastKey = key
             # Now we loop through the key list, extracting the good and bad lines and
             # combining them.
             print("Writing output.")

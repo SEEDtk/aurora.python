@@ -132,7 +132,7 @@ USAGE
                 else:
                     badLines[key] = fields
                 if key != lastKey:
-                    keyList.add(key)
+                    keyList.append(key)
                     lastKey = key
             # Now we loop through the key list, extracting the good and bad lines and
             # combining them.

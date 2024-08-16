@@ -90,13 +90,11 @@ USAGE
         parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
         parser.add_argument(dest="path", help="path to folder with source files [default: %(default)s]", metavar="path")
-        parser.add_argument(dest="prefix", help="file prefix for type of reports", metavar="prefix")
 
         # Process arguments
         args = parser.parse_args()
 
         path = args.path
-        prefix = args.prefix
         verbose = args.verbose
 
         if verbose > 0:
@@ -105,8 +103,8 @@ USAGE
         # This section processes the roles report.  In this report, each sample has two lines of data-- one for
         # good hits and one for bad hits.  We convert the two lines to a single line containing the % of hits
         # that were bad.
-        roleFile = os.path.join(path, prefix + ".roles.tbl")
-        outFile = os.path.join(path, prefix + ".rolePct.tbl")
+        roleFile = os.path.join(path, "roles.tbl")
+        outFile = os.path.join(path, "rolePct.tbl")
         with open(roleFile, 'r') as roleStream, open(outFile, 'w') as outStream:
             lines = roleStream.readlines()
             inIter = iter(lines)

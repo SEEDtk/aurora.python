@@ -5,6 +5,7 @@ encoding//org/theseed/aurora/dir_extract.py=utf-8
 encoding//org/theseed/aurora/dupclean.py=utf-8
 encoding//org/theseed/aurora/md5Check.py=utf-8
 encoding//org/theseed/aurora/model_fix.py=utf-8
+encoding//org/theseed/aurora/order_count.py=utf-8
 encoding//org/theseed/aurora/response_clean.py=utf-8
 encoding//org/theseed/aurora/sraTest_report_fixup.py=utf-8
 encoding//org/theseed/aurora/type_count.py=utf-8

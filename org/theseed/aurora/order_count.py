@@ -1,9 +1,9 @@
 #!/usr/local/bin/python2.7
 # encoding: utf-8
 '''
-org.theseed.aurora.type_count -- Count feature types in SOLR dumps
+org.theseed.aurora.order_count -- Count species within order in SOLR dumps
 
-org.theseed.aurora.type_count is a simple command that processes a SOLR dump and counts the different feature types
+org.theseed.aurora.type_count is a simple command that processes a SOLR dump and counts the species in each order
 
 @author:     Bruce Parrello
 
@@ -83,7 +83,7 @@ USAGE
 
         # Set up some counters.
         dirsIn = 0
-        type_counts = {}
+        order_species_counts = {}
         # Loop through the input directories.
         for inpath in paths:
             # Get the subdirectories of this one.
@@ -93,23 +93,30 @@ USAGE
                 # Compute the input and output paths for this subdirectory.
                 dirpath = inpath + "/" + subdir
                 # Get the genome_feature.json file in the input subdirectory.
-                fidfile = dirpath + "/genome_feature.json"
+                fidfile = dirpath + "/genome.json"
                 # Read the feature dump as a JSON object.
                 with open(fidfile, "r") as f:
                     json_str = f.read()
                     json_obj = json.loads(json_str)
-                    for fidobj in json_obj:
-                        ftype = fidobj["feature_type"]
-                        if ftype in type_counts:
-                            type_counts[ftype] += 1
-                        else:
-                            type_counts[ftype] = 1
+                    genome = json_obj[0]
+                    order = genome["order"]
+                    species = genome["species"]
+                    if not (order in order_species_counts):
+                        order_species_counts[order] = {};
+                    species_map = order_species_counts[order]
+                    if not (species in species_map):
+                        species_map[species] = 1
+                    else:
+                        species_map[species] += 1
         print(f"{dirsIn} directories processed.")
         print("")
-        for ftype in type_counts:
-            count = str(type_counts[ftype]).rjust(15, " ")
-            typestr = ftype.ljust(15, " ")
-            print(f"{typestr} {count}")
+        for order in order_species_counts:
+            orderStr = order.ljust(15, " ")
+            species_map = order_species_counts[order]
+            for species in species_map:
+                count = str(species_map[species]).rjust(15, " ")
+                speciesStr = species.ljust(15, " ")
+                print(f"{orderStr} {speciesStr} {count}")
         return 0
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###

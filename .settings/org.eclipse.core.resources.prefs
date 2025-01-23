@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//org/theseed/aurora/aurora_log_calc.py=utf-8
+encoding//org/theseed/aurora/clean_rules.py=utf-8
 encoding//org/theseed/aurora/dir_extract.py=utf-8
 encoding//org/theseed/aurora/dupclean.py=utf-8
 encoding//org/theseed/aurora/md5Check.py=utf-8

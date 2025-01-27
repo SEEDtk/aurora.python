@@ -2,6 +2,7 @@ eclipse.preferences.version=1
 encoding//org/theseed/aurora/aurora_log_calc.py=utf-8
 encoding//org/theseed/aurora/clean_rules.py=utf-8
 encoding//org/theseed/aurora/column_count.py=utf-8
+encoding//org/theseed/aurora/core_genome_check.py=utf-8
 encoding//org/theseed/aurora/dir_extract.py=utf-8
 encoding//org/theseed/aurora/dupclean.py=utf-8
 encoding//org/theseed/aurora/find_aliases.py=utf-8

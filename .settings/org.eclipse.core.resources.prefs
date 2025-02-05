@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//org/theseed/aurora/aurora_log_calc.py=utf-8
 encoding//org/theseed/aurora/build_file_fix.py=utf-8
+encoding//org/theseed/aurora/check_virus_list.py=utf-8
 encoding//org/theseed/aurora/clean_rules.py=utf-8
 encoding//org/theseed/aurora/column_count.py=utf-8
 encoding//org/theseed/aurora/core_genome_check.py=utf-8

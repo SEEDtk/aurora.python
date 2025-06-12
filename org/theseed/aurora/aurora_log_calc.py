@@ -77,6 +77,8 @@ USAGE
         args = parser.parse_args()
 
         logDir = args.path
+        if not os.path.exists(logDir):
+            raise CLIError(f"Path {logDir} does not exist.")
         verbose = args.verbose
 
         if verbose > 0:

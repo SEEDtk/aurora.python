@@ -11,14 +11,15 @@ device = "auto"
 
 args = sys.argv[1:]
 if not args or len(args) > 3:
-    print(f"Usage: python {sys.argv[0]} <path_to_plaintext_file> [--finetune] [--device DEVICE]")
+    print(f"Usage: python {sys.argv[0]} <path_to_plaintext_file> [--finetune] [--device=DEVICE]")
     sys.exit(1)
 
 for arg in args:
     if arg == "--finetune":
         finetune = True
+        print("Fine-tuning mode enabled.")
     elif arg.startswith("--device"):
-        parts = arg.split()
+        parts = arg.split("=")
         if len(parts) == 2:
             device = parts[1]
         else:
@@ -29,7 +30,7 @@ for arg in args:
         file_path = arg
 
 if file_path is None:
-    print(f"Usage: python {sys.argv[0]} <path_to_plaintext_file> [--finetune] [--device DEVICE]")
+    print(f"Usage: python {sys.argv[0]} <path_to_plaintext_file> [--finetune] [--device=DEVICE]")
     sys.exit(1)
 
 # Device selection
@@ -41,17 +42,19 @@ def resolve_device(device):
             return "mps"
         else:
             return "cpu"
+    print(f"Using device: {device}")
     return device
 
 selected_device = resolve_device(device)
 
 # Load tokenizer
+print("Loading tokenizer")
 tokenizer = AutoTokenizer.from_pretrained("TinyLlama/TinyLlama-1.1B-step-50K-105b")
-
+print(f"Tokenizer {tokenizer.name_or_path} loaded.")
 # Read file
 with open(file_path, 'r', encoding='utf-8') as f:
     text = f.read()
-
+print(f"Read {len(text)} characters from {file_path}.")
 # Tokenize and count tokens
 tokens = tokenizer(text, return_tensors=None)["input_ids"]
 print(f"Total tokens: {len(tokens)}")

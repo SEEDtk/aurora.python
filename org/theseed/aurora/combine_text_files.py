@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # combine_text_files.py - Combine multiple text files into one.
 '''
-This script concatenated multiple text files into a single output file. The default action
+This script concatenates multiple text files into a single output file. The default action
 is to create the output on the standard output, but an output file can be specified with the -o option.
 The input files are specified as positional arguments.
 

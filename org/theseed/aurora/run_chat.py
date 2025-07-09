@@ -68,9 +68,6 @@ def main():
         sys.exit(1)
 
     model_path = sys.argv[1]
-    if not os.path.exists(model_path):
-        print(f"Error: Model path {model_path} does not exist")
-        sys.exit(1)
 
     try:
         model, tokenizer = load_model(model_path)

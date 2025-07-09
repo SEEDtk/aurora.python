@@ -60,7 +60,7 @@ tokens = tokenizer(text, return_tensors=None)["input_ids"]
 print(f"Total tokens: {len(tokens)}")
 
 if finetune:
-    model = LlamaForCausalLM.from_pretrained("TinyLlama/TinyLlama-1.1B-Chat-v1.0")
+    model = LlamaForCausalLM.from_pretrained("keeeeenw/MicroLlama")
     model.to(selected_device)
     dataset = TextDataset(
         tokenizer=tokenizer,
@@ -77,9 +77,13 @@ if finetune:
         output_dir=output_dir,
         overwrite_output_dir=True,
         num_train_epochs=1,
-        per_device_train_batch_size=1,
-        save_steps=10_000,
+        per_device_train_batch_size=2,  # adjust if OOM
+        save_steps=500,
         save_total_limit=2,
+        fp16=True,  # :white_check_mark: mixed precision training (fast, lower memory)
+        logging_steps=50,
+        evaluation_strategy="no",
+        report_to="none",
     )
     trainer = Trainer(
         model=model,

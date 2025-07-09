@@ -49,7 +49,7 @@ selected_device = resolve_device(device)
 
 # Load tokenizer
 print("Loading tokenizer")
-tokenizer = AutoTokenizer.from_pretrained("TinyLlama/TinyLlama-1.1B-step-50K-105b")
+tokenizer = AutoTokenizer.from_pretrained("TinyLlama/TinyLlama-1.1B-Chat-v1.0")
 print(f"Tokenizer {tokenizer.name_or_path} loaded.")
 # Read file
 with open(file_path, 'r', encoding='utf-8') as f:
@@ -60,7 +60,7 @@ tokens = tokenizer(text, return_tensors=None)["input_ids"]
 print(f"Total tokens: {len(tokens)}")
 
 if finetune:
-    model = LlamaForCausalLM.from_pretrained("TinyLlama/TinyLlama-1.1B-step-50K-105b") # ("keeeeenw/MicroLlama")
+    model = LlamaForCausalLM.from_pretrained("TinyLlama/TinyLlama-1.1B-Chat-v1.0") # ("keeeeenw/MicroLlama")
     model.to(selected_device)
     dataset = TextDataset(
         tokenizer=tokenizer,
@@ -72,7 +72,7 @@ if finetune:
         mlm=False
     )
     basename = os.path.splitext(os.path.basename(file_path))[0]
-    output_dir = f"./finetuned-microllama-{basename}"
+    output_dir = f"./finetuned-tinyllama-{basename}"
     training_args = TrainingArguments(
         output_dir=output_dir,
         overwrite_output_dir=True,

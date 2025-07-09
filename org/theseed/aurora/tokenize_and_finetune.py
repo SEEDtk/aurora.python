@@ -82,7 +82,6 @@ if finetune:
         save_total_limit=2,
         fp16=True,  # :white_check_mark: mixed precision training (fast, lower memory)
         logging_steps=50,
-        evaluation_strategy="no",
         report_to="none",
     )
     trainer = Trainer(

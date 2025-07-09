@@ -60,7 +60,7 @@ tokens = tokenizer(text, return_tensors=None)["input_ids"]
 print(f"Total tokens: {len(tokens)}")
 
 if finetune:
-    model = LlamaForCausalLM.from_pretrained("keeeeenw/MicroLlama")
+    model = LlamaForCausalLM.from_pretrained("TinyLlama/TinyLlama-1.1B-step-50K-105b") # ("keeeeenw/MicroLlama")
     model.to(selected_device)
     dataset = TextDataset(
         tokenizer=tokenizer,

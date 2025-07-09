@@ -9,24 +9,24 @@ def load_model(model_path):
     """Load the model and tokenizer from the specified path."""
     print(f"Loading model from {model_path}...")
 
-    # Check if we're dealing with a checkpoint directory
-    if os.path.basename(model_path).startswith('checkpoint-'):
-        checkpoint_path = model_path
-    else:
-        # Look for checkpoint directory
-        checkpoint_dirs = [d for d in os.listdir(model_path) if d.startswith('checkpoint-')]
-        if not checkpoint_dirs:
-            raise ValueError(f"No checkpoint directory found in {model_path}")
-        checkpoint_path = os.path.join(model_path, checkpoint_dirs[0])
+#    # Check if we're dealing with a checkpoint directory
+#    if os.path.basename(model_path).startswith('checkpoint-'):
+#        checkpoint_path = model_path
+#    else:
+#        # Look for checkpoint directory
+#        checkpoint_dirs = [d for d in os.listdir(model_path) if d.startswith('checkpoint-')]
+#        if not checkpoint_dirs:
+#            raise ValueError(f"No checkpoint directory found in {model_path}")
+#        checkpoint_path = os.path.join(model_path, checkpoint_dirs[0])
 
-    print(f"Using checkpoint: {checkpoint_path}")
+#    print(f"Using checkpoint: {checkpoint_path}")
 
     # Load tokenizer from the base model
     tokenizer = AutoTokenizer.from_pretrained("TinyLlama/TinyLlama-1.1B-Chat-v1.0")
 
     # Load the fine-tuned model
     model = LlamaForCausalLM.from_pretrained(
-        checkpoint_path,
+        model_path,
         torch_dtype=torch.float16,
         device_map="auto"
     )

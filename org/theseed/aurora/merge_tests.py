@@ -1,20 +1,22 @@
 #!/usr/local/bin/python
 # encoding: utf-8
 '''
-org.theseed.aurora.model_fix -- Fix FIG IDs in a model seed dump
+org.theseed.aurora.merge_tests -- Merge a directory of test JSONs into a single file
 
-org.theseed.aurora.model_fix is a command-line utility that fixes the problem with modelseed dumps replacing
-the vertical bar in a FIG ID with " or ".
+org.theseed.aurora.merge_tests is a command-line utility that takes multiple MCQ generation runs and stitches the
+JSON files into a single output JSON. Each subdirectory of the input directory should contain a single JSON
+file, and these will all be merged into a single output JSON file.
 
 @author:     Bruce Parrello
 
-@copyright:  2024 Fellowship for Interpretation of Genomes
+@copyright:  2025 Fellowship for Interpretation of Genomes
 
-@deffield    updated: 07/19/2024
+@deffield    updated: 11/10/2025
 '''
 
 import sys
 import os
+import json
 
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
@@ -39,7 +41,7 @@ class CLIError(Exception):
         return self.msg
 
 def main(argv=None): # IGNORE:C0111
-    '''source is the source directory, target is the destination directory.'''
+    '''source is the source directory, target is the destination file.'''
 
     if argv is None:
         argv = sys.argv
@@ -70,8 +72,8 @@ USAGE
         parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
         parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
-        parser.add_argument(dest="source", help="path to source folder [default: %(default)s]", metavar="source", default="model")
-        parser.add_argument(dest="target", help="path to new target folder [default: %(default)s]", metavar="target", default="model_fixed")
+        parser.add_argument(dest="source", help="path to source folder [default: %(default)s]", metavar="source", default="testSets")
+        parser.add_argument(dest="target", help="path to new target file [default: %(default)s]", metavar="target", default="allTests.json")
 
         # Process arguments
         args = parser.parse_args()
@@ -80,26 +82,40 @@ USAGE
         target = args.target
         verbose = args.verbose
 
-        if not os.path.exists(target):
-            print(f"Creating directory {target}.")
-            os.mkdir(target)
+        if not os.path.isdir(source):
+            print(f"Source directory {source} is not found or is invalid.")
 
         if verbose > 0:
             print("Verbose mode on")
 
-        inFiles = os.listdir(source)
-        print(f"{len(inFiles)} files found in directory {source}.")
-        print(f"New files will be created in {target}.")
-        for inBase in inFiles:
-            inFile = os.path.join(source, inBase)
-            with open(inFile) as inStream:
-                lines = inStream.readlines()
-            outFile = os.path.join(target, inBase)
-            print(f"Copying {len(lines)} lines from {inFile} to {outFile}.")
-            with open(outFile, "w") as outStream:
-                for line in lines:
-                    line2 = line.replace("fig or ", "fig|")
-                    outStream.write(line2)
+        inDirs = os.listdir(source)
+        print(f"{len(inDirs)} sub-directories found in directory {source}.")
+        print(f"Output will be to {target}.")
+        linesOut = 0
+        # The initial delimiter will be a left bracket. After that, a comma.
+        delim = "["
+        with open(target, "w") as outStream:
+            for inBase in inDirs:
+                inDir = os.path.join(source, inBase)
+                if os.path.isdir(inDir):
+                    inFiles = [f for f in os.listdir(inDir) if f.endswith(".json")]
+                    for inFileName in inFiles:
+                        inFile = os.path.join(inDir, inFileName)
+                        if os.path.isfile(inFile):
+                            print(f"Scanning file {inFile}.")
+                            with open(inFile) as inStream:
+                                mcqList = json.load(inStream)
+                                print(f"{len(mcqList)} records read.")
+                                # Write the questions to the output.
+                                for line in mcqList:
+                                    outStream.write(delim + "\n")
+                                    outStream.write("    " + json.dumps(line))
+                                    delim = ","
+                                    linesOut += 1
+            # Finish the output.
+            outStream.write("\n]\n")
+            outStream.flush()
+            print(f"{linesOut} total questions written.")
         return 0
     except KeyboardInterrupt:
         print("Interrupted!")
@@ -121,7 +137,7 @@ if __name__ == "__main__":
     if PROFILE:
         import cProfile
         import pstats
-        profile_filename = 'org.theseed.aurora.model_fix_profile.txt'
+        profile_filename = 'org.theseed.aurora.merge_tests_profile.txt'
         cProfile.run('main()', profile_filename)
         statsfile = open("profile_stats.txt", "wb")
         p = pstats.Stats(profile_filename, stream=statsfile)
